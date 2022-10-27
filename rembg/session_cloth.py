@@ -5,7 +5,7 @@ from PIL import Image
 from PIL.Image import Image as PILImage
 from scipy.special import log_softmax
 
-from session_base import BaseSession
+import session_base
 
 pallete1 = [
     0,
@@ -53,7 +53,7 @@ pallete3 = [
 ]
 
 
-class ClothSession(BaseSession):
+class ClothSession(session_base.BaseSession):
     def predict(self, img: PILImage) -> List[PILImage]:
         ort_outs = self.inner_session.run(
             None, self.normalize(img, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (768, 768))

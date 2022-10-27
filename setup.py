@@ -18,7 +18,7 @@ with open(here / "requirements-gpu.txt") as f:
     gpu_requireds = f.read().splitlines()
 
 setup(
-    name="rembg",
+    name="restapi",
     description="Remove image background",
     long_description=long_description,
     long_description_content_type="text/markdown",

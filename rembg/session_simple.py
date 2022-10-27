@@ -4,10 +4,10 @@ import numpy as np
 from PIL import Image
 from PIL.Image import Image as PILImage
 
-from session_base import BaseSession
+import session_base
 
 
-class SimpleSession(BaseSession):
+class SimpleSession(session_base.BaseSession):
     def predict(self, img: PILImage) -> List[PILImage]:
         ort_outs = self.inner_session.run(
             None,

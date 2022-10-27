@@ -8,30 +8,30 @@ from typing import Type
 import gdown
 import onnxruntime as ort
 
-from session_base import BaseSession
-from session_cloth import ClothSession
-from session_simple import SimpleSession
+import session_base
+import session_cloth
+import session_simple
 
 
-def new_session(model_name: str) -> BaseSession:
-    session_class: Type[BaseSession]
+def new_session(model_name: str) -> session_base.BaseSession:
+    session_class: Type[session_base.BaseSession]
 
     if model_name == "u2netp":
         md5 = "8e83ca70e441ab06c318d82300c84806"
         url = "https://drive.google.com/uc?id=1tNuFmLv0TSNDjYIkjEdeH1IWKQdUA4HR"
-        session_class = SimpleSession
+        session_class = session_simple.SimpleSession
     elif model_name == "u2net":
         md5 = "60024c5c889badc19c04ad937298a77b"
         url = "https://drive.google.com/uc?id=1tCU5MM1LhRgGou5OpmpjBQbSrYIUoYab"
-        session_class = SimpleSession
+        session_class = session_simple.SimpleSession
     elif model_name == "u2net_human_seg":
         md5 = "c09ddc2e0104f800e3e1bb4652583d1f"
         url = "https://drive.google.com/uc?id=1ZfqwVxu-1XWC1xU1GHIP-FM_Knd_AX5j"
-        session_class = SimpleSession
+        session_class = session_simple.SimpleSession
     elif model_name == "u2net_cloth_seg":
         md5 = "2434d1f3cb744e0e49386c906e5a08bb"
         url = "https://drive.google.com/uc?id=15rKbQSXQzrKCQurUjZFg8HqzZad8bcyz"
-        session_class = ClothSession
+        session_class = session_cloth.ClothSession
     else:
         assert AssertionError(
             "Choose between u2net, u2netp, u2net_human_seg or u2net_cloth_seg"
