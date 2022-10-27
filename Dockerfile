@@ -17,12 +17,12 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3.9
 
 RUN pip install gdown
 
-RUN mkdir -p ~/.u2net
+RUN mkdir -p /rembg/.u2net
 
-RUN gdown https://drive.google.com/uc?id=1rcGrMMRv5j7f6qD-fbLnZdAhsNZV6RWf -O ~/.u2net/u2netp.onnx
-RUN gdown https://drive.google.com/uc?id=1grnx_D7Ql1MLfStOfWk1SccTdOb3qtpz -O ~/.u2net/u2net.onnx
-RUN gdown https://drive.google.com/uc?id=1AIbrxhEuy0JXW9uDtYVyqgiCzBUU0QwU -O ~/.u2net/u2net_human_seg.onnx
-RUN gdown https://drive.google.com/uc?id=1QbqEeOE9ol7SsCpro167QvkgvDVarGtc -O ~/.u2net/u2net_cloth_seg.onnx
+RUN gdown https://drive.google.com/uc?id=1rcGrMMRv5j7f6qD-fbLnZdAhsNZV6RWf -O /rembg/.u2net/u2netp.onnx
+RUN gdown https://drive.google.com/uc?id=1grnx_D7Ql1MLfStOfWk1SccTdOb3qtpz -O /rembg/.u2net/u2net.onnx
+RUN gdown https://drive.google.com/uc?id=1AIbrxhEuy0JXW9uDtYVyqgiCzBUU0QwU -O /rembg/.u2net/u2net_human_seg.onnx
+RUN gdown https://drive.google.com/uc?id=1QbqEeOE9ol7SsCpro167QvkgvDVarGtc -O /rembg/.u2net/u2net_cloth_seg.onnx
 
 ENV APP_HOME /rembg
 WORKDIR $APP_HOME
