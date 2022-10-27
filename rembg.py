@@ -1,4 +1,4 @@
-from rembg.cli import main
+from examples.cli import main
 
 if __name__ == "__main__":
     main()

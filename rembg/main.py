@@ -5,20 +5,17 @@ from asyncer import asyncify
 from fastapi import Depends, FastAPI, File, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import Response
-import _version
-import bg
-import session_factory
-import session_base
+from rembg.bg import remove
+from rembg.session_factory import new_session
+from rembg.session_base import BaseSession
 
 @click.group()
-@click.version_option(version=_version.get_versions()["version"])
 def main() -> None:
     pass
 
 app = FastAPI(
         title="Rembg",
         description="Rembg is a tool to remove images background. That is it.",
-        version=_version.get_versions()["version"],
         contact={
             "name": "Daniel Gatis",
             "url": "https://github.com/danielgatis",
@@ -38,7 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sessions: dict[str, session_base.BaseSession] = {}
+sessions: dict[str, BaseSession] = {}
 
 class ModelType(str, Enum):
     u2net = "u2net"
@@ -116,10 +113,10 @@ class CommonQueryPostParams:
 
 def im_without_bg(content: bytes, commons: CommonQueryParams) -> Response:
     return Response(
-        bg.remove(
+        remove(
             content,
             session=sessions.setdefault(
-                commons.model.value, session_factory.new_session(commons.model.value)
+                commons.model.value, new_session(commons.model.value)
             ),
             alpha_matting=commons.a,
             alpha_matting_foreground_threshold=commons.af,

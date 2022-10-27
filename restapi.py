@@ -1,4 +1,4 @@
-from rembg.restapi import main
+from rembg.main import main
 
 if __name__ == "__main__":
     main()

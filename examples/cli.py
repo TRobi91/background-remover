@@ -16,10 +16,10 @@ from tqdm import tqdm
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
-from . import _version
-from .bg import remove
-from .session_base import BaseSession
-from .session_factory import new_session
+from rembg import _version
+from rembg.bg import remove
+from rembg.session_base import BaseSession
+from rembg.session_factory import new_session
 
 
 @click.group()

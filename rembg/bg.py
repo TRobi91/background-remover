@@ -18,8 +18,8 @@ from pymatting.foreground.estimate_foreground_ml import estimate_foreground_ml
 from pymatting.util.util import stack_images
 from scipy.ndimage import binary_erosion
 
-import session_base
-import session_factory
+from rembg.session_factory import new_session
+from rembg.session_base import BaseSession
 
 kernel = getStructuringElement(MORPH_ELLIPSE, (3, 3))
 
@@ -112,7 +112,7 @@ def remove(
     alpha_matting_foreground_threshold: int = 240,
     alpha_matting_background_threshold: int = 10,
     alpha_matting_erode_size: int = 10,
-    session: Optional[session_base.BaseSession] = None,
+    session: Optional[BaseSession] = None,
     only_mask: bool = False,
     post_process_mask: bool = False,
 ) -> Union[bytes, PILImage, np.ndarray]:
@@ -130,7 +130,7 @@ def remove(
         raise ValueError("Input type {} is not supported.".format(type(data)))
 
     if session is None:
-        session = session_factory.new_session("u2net")
+        session = new_session("u2net")
 
     masks = session.predict(img)
     cutouts = []
