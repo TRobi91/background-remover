@@ -15,17 +15,22 @@ RUN add-apt-repository ppa:deadsnakes/ppa
 RUN apt install -y python3.9 python3.9-distutils
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3.9
 
-WORKDIR /rembg
-
-COPY . .
-RUN python3.9 -m pip install .[gpu]
+RUN pip install gdown
 
 RUN mkdir -p ~/.u2net
-RUN gdown https://drive.google.com/uc?id=1tNuFmLv0TSNDjYIkjEdeH1IWKQdUA4HR -O ~/.u2net/u2netp.onnx
-RUN gdown https://drive.google.com/uc?id=1tCU5MM1LhRgGou5OpmpjBQbSrYIUoYab -O ~/.u2net/u2net.onnx
-RUN gdown https://drive.google.com/uc?id=1ZfqwVxu-1XWC1xU1GHIP-FM_Knd_AX5j -O ~/.u2net/u2net_human_seg.onnx
-RUN gdown https://drive.google.com/uc?id=15rKbQSXQzrKCQurUjZFg8HqzZad8bcyz -O ~/.u2net/u2net_cloth_seg.onnx
+
+RUN gdown https://drive.google.com/uc?id=1rcGrMMRv5j7f6qD-fbLnZdAhsNZV6RWf -O ~/.u2net/u2netp.onnx
+RUN gdown https://drive.google.com/uc?id=1grnx_D7Ql1MLfStOfWk1SccTdOb3qtpz -O ~/.u2net/u2net.onnx
+RUN gdown https://drive.google.com/uc?id=1AIbrxhEuy0JXW9uDtYVyqgiCzBUU0QwU -O ~/.u2net/u2net_human_seg.onnx
+RUN gdown https://drive.google.com/uc?id=1QbqEeOE9ol7SsCpro167QvkgvDVarGtc -O ~/.u2net/u2net_cloth_seg.onnx
+
+ENV APP_HOME /rembg
+WORKDIR $APP_HOME
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
 
 EXPOSE 5000
-ENTRYPOINT ["rembg"]
-CMD ["--help"]
+#CMD exec gunicorn --bind :5000 --workers 1 --threads 8 --timeout 0 --pythonpath=/rembg/rembg --worker-class uvicorn.workers.UvicornWorker main:app

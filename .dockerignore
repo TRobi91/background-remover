@@ -3,6 +3,7 @@
 !setup.py
 !setup.cfg
 !requirements.txt
+!main.py
 !requirements-cpu.txt
 !requirements-gpu.txt
 !versioneer.py

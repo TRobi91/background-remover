@@ -4,7 +4,7 @@ from pathlib import Path
 from imagehash import average_hash
 from PIL import Image
 
-from rembg import remove
+from main import remove
 
 here = Path(__file__).parent.resolve()
 

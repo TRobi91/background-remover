@@ -5,6 +5,7 @@ from asyncer import asyncify
 from fastapi import Depends, FastAPI, File, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import Response
+
 from rembg.bg import remove
 from rembg.session_factory import new_session
 from rembg.session_base import BaseSession
