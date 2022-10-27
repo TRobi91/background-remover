@@ -28,4 +28,4 @@ RUN gdown https://drive.google.com/uc?id=1AIbrxhEuy0JXW9uDtYVyqgiCzBUU0QwU -O ~/
 RUN gdown https://drive.google.com/uc?id=1QbqEeOE9ol7SsCpro167QvkgvDVarGtc -O ~/.u2net/u2net_cloth_seg.onnx
 
 EXPOSE 5000
-CMD ls;cd rembg;ls;gunicorn --bind 0.0.0.0:5000 --workers 1 --worker-class uvicorn.workers.UvicornWorker --threads 8 restapi:app
+CMD cd rembg;ls;PYTHONPATH=`pwd`; gunicorn --bind 0.0.0.0:5000 --workers 1 --worker-class uvicorn.workers.UvicornWorker --threads 8 restapi:app
