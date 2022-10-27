@@ -34,7 +34,7 @@ setup(
     install_requires=requireds,
     entry_points={
         "console_scripts": [
-            "rembg=rembg.cli:main",
+            "rembg=rembg.restapi:main",
         ],
     },
     extras_require={
