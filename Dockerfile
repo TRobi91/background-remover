@@ -33,4 +33,5 @@ RUN pip install -r requirements.txt
 COPY . .
 
 EXPOSE 5000
-CMD exec gunicorn --bind :5000 --workers 1 --threads 8 --timeout 0 --pythonpath=/rembg/rembg --worker-class uvicorn.workers.UvicornWorker main:app
+
+CMD exec gunicorn --bind 0.0.0.0:5000 --workers 4 --threads 8 --timeout 0 --pythonpath=/rembg/rembg --log-level=debug --worker-class uvicorn.workers.UvicornWorker main:app
