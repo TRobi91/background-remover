@@ -1,6 +1,9 @@
+import datetime
 import io
 from enum import Enum
 from typing import List, Optional, Union
+
+print("time 0: " + datetime.datetime.now().isoformat())
 
 import numpy as np
 from cv2 import (
@@ -11,13 +14,20 @@ from cv2 import (
     getStructuringElement,
     morphologyEx,
 )
+print("time 1: " + datetime.datetime.now().isoformat())
 from PIL import Image
 from PIL.Image import Image as PILImage
 from scipy.ndimage import binary_erosion
 from session_factory import new_session
 from session_base import BaseSession
+print("time 2: " + datetime.datetime.now().isoformat())
+from alpha_matting import estimate_alpha_cf, estimate_foreground_ml, stack_images
+print("time 3: " + datetime.datetime.now().isoformat())
+print("time 4: " + datetime.datetime.now().isoformat())
+print("time 5: " + datetime.datetime.now().isoformat())
 
 kernel = getStructuringElement(MORPH_ELLIPSE, (3, 3))
+print("time 6: " + datetime.datetime.now().isoformat())
 
 class ReturnType(Enum):
     BYTES = 0
@@ -57,10 +67,6 @@ def alpha_matting_cutout(
 
     img_normalized = img / 255.0
     trimap_normalized = trimap / 255.0
-
-    from pymatting.alpha.estimate_alpha_cf import estimate_alpha_cf
-    from pymatting.foreground.estimate_foreground_ml import estimate_foreground_ml
-    from pymatting.util.util import stack_images
 
     alpha = estimate_alpha_cf(img_normalized, trimap_normalized)
     foreground = estimate_foreground_ml(img_normalized, alpha)
