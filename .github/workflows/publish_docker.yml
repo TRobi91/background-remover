@@ -23,6 +23,6 @@ jobs:
               uses: docker/build-push-action@v2
               with:
                   context: .
-                  file: ./Dockerfile
+                  file: ./Dockerfile-single
                   push: true
                   tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rembg:latest

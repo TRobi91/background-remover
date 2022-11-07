@@ -1,6 +1,7 @@
 from enum import Enum
 
 import click
+import uvicorn
 from asyncer import asyncify
 from fastapi import Depends, FastAPI, File, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -145,3 +146,6 @@ async def post_index(
 ):
     return await asyncify(im_without_bg)(file, commons)
 
+if __name__ == '__main__':
+    print('main called')
+    uvicorn.run(app, host="0.0.0.0", port=6000, log_level="debug")

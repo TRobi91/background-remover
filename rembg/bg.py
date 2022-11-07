@@ -21,10 +21,6 @@ from scipy.ndimage import binary_erosion
 from session_factory import new_session
 from session_base import BaseSession
 print("time 2: " + datetime.datetime.now().isoformat())
-from alpha_matting import estimate_alpha_cf, estimate_foreground_ml, stack_images
-print("time 3: " + datetime.datetime.now().isoformat())
-print("time 4: " + datetime.datetime.now().isoformat())
-print("time 5: " + datetime.datetime.now().isoformat())
 
 kernel = getStructuringElement(MORPH_ELLIPSE, (3, 3))
 print("time 6: " + datetime.datetime.now().isoformat())
@@ -42,6 +38,7 @@ def alpha_matting_cutout(
     background_threshold: int,
     erode_structure_size: int,
 ) -> PILImage:
+    from alpha_matting import stack_images, estimate_foreground_ml, estimate_alpha_cf
 
     if img.mode == "RGBA" or img.mode == "CMYK":
         img = img.convert("RGB")
@@ -121,6 +118,7 @@ def remove(
     only_mask: bool = False,
     post_process_mask: bool = False,
 ) -> Union[bytes, PILImage, np.ndarray]:
+    print('start remove')
 
     if isinstance(data, PILImage):
         return_type = ReturnType.PILLOW
@@ -137,8 +135,13 @@ def remove(
     if session is None:
         session = new_session("u2net")
 
+    print('start remove 2')
+
     masks = session.predict(img)
+    print(masks)
     cutouts = []
+
+    print('start remove 3')
 
     for mask in masks:
         if post_process_mask:
@@ -149,6 +152,7 @@ def remove(
 
         elif alpha_matting:
             try:
+                print('start remove 3.1')
                 cutout = alpha_matting_cutout(
                     img,
                     mask,
@@ -157,13 +161,17 @@ def remove(
                     alpha_matting_erode_size,
                 )
             except ValueError:
+                print('start remove 3.2')
                 cutout = naive_cutout(img, mask)
 
         else:
+            print('start remove 3.3')
             cutout = naive_cutout(img, mask)
 
+        print('start remove 4')
         cutouts.append(cutout)
 
+    print('start remove 5')
     cutout = img
     if len(cutouts) > 0:
         cutout = get_concat_v_multi(cutouts)
@@ -173,6 +181,8 @@ def remove(
 
     if ReturnType.NDARRAY == return_type:
         return np.asarray(cutout)
+
+    print('start remove 6')
 
     bio = io.BytesIO()
     cutout.save(bio, "PNG")

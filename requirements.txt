@@ -6,6 +6,7 @@ filetype==1.1.0
 gdown==4.5.1
 imagehash==4.2.1
 numpy==1.21.6
+numba==0.56.4
 onnxruntime==1.12.1
 opencv-python-headless==4.6.0.66
 pillow==9.2.0
@@ -16,4 +17,4 @@ scipy==1.7.3
 tqdm==4.64.0
 uvicorn==0.18.3
 watchdog==2.1.9
-gunicorn
+gunicorn==20.1.0
