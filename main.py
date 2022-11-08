@@ -16,17 +16,13 @@ def main() -> None:
     pass
 
 app = FastAPI(
-        title="Rembg",
-        description="Rembg is a tool to remove images background. That is it.",
-        contact={
-            "name": "Daniel Gatis",
-            "url": "https://github.com/danielgatis",
-            "email": "danielgatis@gmail.com",
-        },
-        license_info={
-            "name": "MIT License",
-            "url": "https://github.com/danielgatis/rembg/blob/main/LICENSE.txt",
-        }
+        title="Remove background",
+        description="Remove background for photo editor",
+        # contact={
+        #     "name": "Daniel Gatis",
+        #     "url": "https://github.com/danielgatis",
+        #     "email": "danielgatis@gmail.com",
+        # },
 )
 
 app.add_middleware(
@@ -113,6 +109,7 @@ class CommonQueryPostParams:
         self.om = om
         self.ppm = ppm
 
+
 def im_without_bg(content: bytes, commons: CommonQueryParams) -> Response:
     return Response(
         remove(
@@ -146,6 +143,6 @@ async def post_index(
 ):
     return await asyncify(im_without_bg)(file, commons)
 
+
 if __name__ == '__main__':
-    print('main called')
     uvicorn.run(app, host="0.0.0.0", port=6000, log_level="debug")

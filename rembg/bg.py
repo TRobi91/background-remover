@@ -1,10 +1,7 @@
-import datetime
 import io
 from enum import Enum
 from typing import List, Optional, Union
-
-print("time 0: " + datetime.datetime.now().isoformat())
-
+from fastapi.logger import logger
 import numpy as np
 from cv2 import (
     BORDER_DEFAULT,
@@ -14,16 +11,13 @@ from cv2 import (
     getStructuringElement,
     morphologyEx,
 )
-print("time 1: " + datetime.datetime.now().isoformat())
 from PIL import Image
 from PIL.Image import Image as PILImage
 from scipy.ndimage import binary_erosion
 from session_factory import new_session
 from session_base import BaseSession
-print("time 2: " + datetime.datetime.now().isoformat())
 
 kernel = getStructuringElement(MORPH_ELLIPSE, (3, 3))
-print("time 6: " + datetime.datetime.now().isoformat())
 
 class ReturnType(Enum):
     BYTES = 0
@@ -38,6 +32,7 @@ def alpha_matting_cutout(
     background_threshold: int,
     erode_structure_size: int,
 ) -> PILImage:
+    logger.info("Using alpha matting for cutout")
     from alpha_matting import stack_images, estimate_foreground_ml, estimate_alpha_cf
 
     if img.mode == "RGBA" or img.mode == "CMYK":
@@ -118,7 +113,6 @@ def remove(
     only_mask: bool = False,
     post_process_mask: bool = False,
 ) -> Union[bytes, PILImage, np.ndarray]:
-    print('start remove')
 
     if isinstance(data, PILImage):
         return_type = ReturnType.PILLOW
@@ -135,13 +129,8 @@ def remove(
     if session is None:
         session = new_session("u2net")
 
-    print('start remove 2')
-
     masks = session.predict(img)
-    print(masks)
     cutouts = []
-
-    print('start remove 3')
 
     for mask in masks:
         if post_process_mask:
@@ -152,7 +141,6 @@ def remove(
 
         elif alpha_matting:
             try:
-                print('start remove 3.1')
                 cutout = alpha_matting_cutout(
                     img,
                     mask,
@@ -161,17 +149,13 @@ def remove(
                     alpha_matting_erode_size,
                 )
             except ValueError:
-                print('start remove 3.2')
                 cutout = naive_cutout(img, mask)
 
         else:
-            print('start remove 3.3')
             cutout = naive_cutout(img, mask)
 
-        print('start remove 4')
         cutouts.append(cutout)
 
-    print('start remove 5')
     cutout = img
     if len(cutouts) > 0:
         cutout = get_concat_v_multi(cutouts)
@@ -181,8 +165,6 @@ def remove(
 
     if ReturnType.NDARRAY == return_type:
         return np.asarray(cutout)
-
-    print('start remove 6')
 
     bio = io.BytesIO()
     cutout.save(bio, "PNG")

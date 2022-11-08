@@ -1,15 +1,10 @@
 from numba.pycc import CC
+from numba import njit, prange
+import numpy as np
 
 cc = CC('alpha_matting_precompiled')
 cc.verbose = True
 
-import datetime
-
-print("time 2.4: " + datetime.datetime.now().isoformat())
-from numba import njit, prange
-
-print("time 2.5: " + datetime.datetime.now().isoformat())
-import numpy as np
 
 @njit()
 @cc.export("resize_nearest_multichannel", "void(f4[:, :, :], f4[:, :, :])")
@@ -317,8 +312,6 @@ def ichol(
             l[i] = j  # Insert index of non-zero element into list i
     return nnz
 
-
-print("time 2.13: " + datetime.datetime.now().isoformat())
 
 @njit()
 @cc.export("cf_laplacian", "void(f8[:, :, :], f8, i8, f8[:, :, :], i8[:], i8[:], b1[:, :])")
