@@ -1,4 +1,47 @@
+FROM python:3.9.15 AS build
+
+RUN apt-get update && apt-get -y upgrade \
+  && apt-get install -y --no-install-recommends \
+    git \
+    wget \
+    g++ \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV PATH="/root/miniconda3/bin:${PATH}"
+ARG PATH="/root/miniconda3/bin:${PATH}"
+
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && mkdir /root/.conda \
+    && bash Miniconda3-latest-Linux-x86_64.sh -b \
+    && rm -f Miniconda3-latest-Linux-x86_64.sh \
+    && echo "Running $(conda --version)" && \
+    conda init bash && \
+    . /root/.bashrc && \
+    conda update conda && \
+    conda create -n python-app && \
+    conda activate python-app
+RUN conda install -n python-app python=3.9
+RUN conda install -n python-app pip
+RUN conda install -n python-app numba
+RUN conda install -n python-app gcc_linux-64 gxx_linux-64
+RUN conda install -n python-app scipy
+
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.9
+RUN python3.9 -m pip install numba
+RUN python3.9 -m pip install scipy
+
+RUN echo 'conda activate python-app' >> /root/.bashrc
+
+ENV APP_HOME /rembg
+WORKDIR $APP_HOME
+COPY rembg/alpha_matting_compile.py rembg/alpha_matting_compile.py
+
+RUN ["/bin/bash", "-l", "-c", "python3.9 rembg/alpha_matting_compile.py"]
+
 FROM nvidia/cuda:11.6.0-runtime-ubuntu18.04
+
+COPY --from=build /rembg /rembg
 
 ENV DEBIAN_FRONTEND noninteractive
 
