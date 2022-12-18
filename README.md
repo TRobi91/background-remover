@@ -237,3 +237,12 @@ Liked some of my work? Buy me a coffee (or more likely a beer)
 Copyright (c) 2020-present [Daniel Gatis](https://github.com/danielgatis)
 
 Licensed under [MIT License](./LICENSE.txt)
+
+
+### Deploy to CloudRun
+
+git pull
+docker build -t image-remover-custom .
+docker tag image-remover-custom eu.gcr.io/background-remover-366718/image-remover-custom:1.2.1
+docker push eu.gcr.io/background-remover-366718/image-remover-custom:1.2.1
+gcloud run deploy background-remover --image=eu.gcr.io/background-remover-366718/image-remover-custom:1.2.1 --port=5000 --region=europe-west1 --allow-unauthenticated --platform=managed --min-instances=0 --max-instances=1 --timeout=600 --memory=16G --cpu=4

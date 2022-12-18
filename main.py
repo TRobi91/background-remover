@@ -9,7 +9,8 @@ from starlette.responses import Response
 
 from rembg.bg import remove
 from rembg.session_factory import new_session
-from rembg.session_base import BaseSession
+from rembg.session_simple import SimpleSession
+
 
 @click.group()
 def main() -> None:
@@ -33,7 +34,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-sessions: dict[str, BaseSession] = {}
+sessions: dict[str, SimpleSession] = {}
 
 class ModelType(str, Enum):
     u2net = "u2net"
@@ -114,15 +115,9 @@ def im_without_bg(content: bytes, commons: CommonQueryParams) -> Response:
     return Response(
         remove(
             content,
-            session=sessions.setdefault(
+            sessions.setdefault(
                 commons.model.value, new_session(commons.model.value)
             ),
-            alpha_matting=commons.a,
-            alpha_matting_foreground_threshold=commons.af,
-            alpha_matting_background_threshold=commons.ab,
-            alpha_matting_erode_size=commons.ae,
-            only_mask=commons.om,
-            post_process_mask=commons.ppm,
         ),
         media_type="image/png",
     )
